@@ -154,4 +154,15 @@ export default function FuncionarioApp({ funcionario, onLogout }) {
             })
           )}
         </div>
-      
+      </main>
+    </div>
+  );
+}
+
+function Center({ children }) {
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", color: C.navyLight, fontWeight: 700, fontFamily: "system-ui" }}>
+      {children}
+    </div>
+  );
+}
