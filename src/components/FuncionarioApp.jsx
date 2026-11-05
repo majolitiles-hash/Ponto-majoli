@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { C, today, nowStr, fmtHours, fmtDate, getDow, calcTotal } from "../lib/helpers";
+import { C, today, nowStr, fmtHours, fmtDate, getDow, calcTotal, DIAS_SEMANA, diaSemanaDe, resumoHorario } from "../lib/helpers";
 
 export default function FuncionarioApp({ funcionario, onLogout }) {
   const [reg, setReg] = useState(null);
   const [historico, setHistorico] = useState([]);
+  const [horario, setHorario] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const carregar = async () => {
@@ -24,6 +25,9 @@ export default function FuncionarioApp({ funcionario, onLogout }) {
       .order("data", { ascending: false })
       .limit(14);
     setHistorico(ultimos || []);
+
+    const { data: hs } = await supabase.from("horarios").select("*").eq("funcionario_id", funcionario.id);
+    setHorario(hs || []);
     setLoading(false);
   };
 
@@ -132,6 +136,28 @@ export default function FuncionarioApp({ funcionario, onLogout }) {
             })}
           </div>
         </div>
+
+        {horario.length > 0 && (
+          <div style={{ background: C.white, borderRadius: 14, padding: 20, marginBottom: 16, boxShadow: "0 1px 6px rgba(27,58,107,0.08)" }}>
+            <div style={{ fontSize: 12, color: C.textLight, fontWeight: 700, textTransform: "uppercase", marginBottom: 12 }}>
+              O meu horário
+            </div>
+            {DIAS_SEMANA.map((d) => {
+              const h = horario.find((x) => x.dia_semana === d.dia);
+              const hoje = d.dia === diaSemanaDe(today());
+              const txt = resumoHorario(h);
+              return (
+                <div
+                  key={d.dia}
+                  style={{ display: "flex", justifyContent: "space-between", padding: "8px 10px", borderRadius: 8, fontSize: 13, background: hoje ? "#FFFBF0" : "transparent", border: hoje ? `1.5px solid ${C.orange}` : "1.5px solid transparent" }}
+                >
+                  <span style={{ fontWeight: hoje ? 800 : 600 }}>{d.nome}{hoje ? " (hoje)" : ""}</span>
+                  <span style={{ fontWeight: 700, color: txt === "Folga" ? C.grayMid : C.navy }}>{txt || "—"}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div style={{ background: C.white, borderRadius: 14, padding: 20, boxShadow: "0 1px 6px rgba(27,58,107,0.08)" }}>
           <div style={{ fontSize: 12, color: C.textLight, fontWeight: 700, textTransform: "uppercase", marginBottom: 12 }}>

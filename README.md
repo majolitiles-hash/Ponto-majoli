@@ -67,7 +67,17 @@ Tempo estimado: 15–20 minutos, sem precisar programar nada.
 ## Como funciona no dia a dia
 
 - **Funcionário:** abre o app, digita o PIN, vê 4 botões (Entrada, Saída Almoço, Volta Almoço, Saída) e toca em "Bater agora" na hora certa.
-- **Tu (admin):** abre com o teu PIN, tens 4 abas — Ponto (visão do dia, podes corrigir horários manualmente), Histórico (filtra por funcionário/mês, apaga erros), Equipa (cadastra/edita funcionários), Resumo (total de horas e valor a pagar por mês, por funcionário).
+- **Tu (admin):** abre com o teu PIN, tens 5 abas — Ponto (visão do dia, podes corrigir horários manualmente), Horários (quadro semanal previsto), Histórico (filtra por funcionário/mês, apaga erros), Equipa (cadastra/edita funcionários), Resumo (total de horas e valor a pagar por mês, por funcionário).
+
+## Quadro de horários
+
+Na aba **🗓 Horários** defines o horário previsto de cada funcionário para cada dia da semana (entrada, almoço, saída, ou folga).
+
+- **Já tinhas o app instalado antes disto?** No Supabase → SQL Editor, cola o ficheiro `supabase-horarios.sql` e clica **Run** (só uma vez).
+- Clica **＋ Definir** num funcionário: vem pré-preenchido com Seg–Sex 08:00–12:00 / 13:00–17:00 e fim de semana de folga. Ajusta e **Guardar horário**.
+- **Copiar Segunda para Ter–Sex** poupa trabalho; **Aplicar este mesmo horário também a** grava o mesmo quadro para vários funcionários de uma vez.
+- Na aba **Ponto** aparece o horário previsto de cada um e um aviso de **atraso** quando a entrada passa mais de 5 min do previsto.
+- Cada funcionário vê o seu horário da semana no próprio app (o dia de hoje fica destacado).
 
 ## Dúvidas comuns
 

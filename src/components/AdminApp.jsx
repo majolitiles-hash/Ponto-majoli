@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
-import { C, today, fmtHours, fmtDate, getDow, calcTotal } from "../lib/helpers";
+import { C, today, fmtHours, fmtDate, getDow, calcTotal, horarioDoDia, resumoHorario, atrasoEntrada } from "../lib/helpers";
 import { EquipaTab, ResumoTab } from "./AdminTabsExtra";
+import HorariosTab from "./HorariosTab";
 
 export default function AdminApp({ funcionario, onLogout }) {
   const [tab, setTab] = useState("ponto");
   const [funcionarios, setFuncionarios] = useState([]);
   const [registros, setRegistros] = useState([]);
+  const [horarios, setHorarios] = useState([]);
+  const [horariosErro, setHorariosErro] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const carregarTudo = async () => {
     setLoading(true);
     const { data: fs } = await supabase.from("funcionarios").select("*").order("nome");
     const { data: rs } = await supabase.from("registros").select("*");
+    const { data: hs, error: hErr } = await supabase.from("horarios").select("*");
     setFuncionarios(fs || []);
     setRegistros(rs || []);
+    setHorarios(hs || []);
+    setHorariosErro(!!hErr);
     setLoading(false);
   };
 
@@ -35,7 +41,7 @@ export default function AdminApp({ funcionario, onLogout }) {
           </div>
         </div>
         <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-          {[["ponto", "⏱ Ponto"], ["historico", "📋 Histórico"], ["equipa", "👷 Equipa"], ["resumo", "💰 Resumo"]].map(([k, v]) => (
+          {[["ponto", "⏱ Ponto"], ["horarios", "🗓 Horários"], ["historico", "📋 Histórico"], ["equipa", "👷 Equipa"], ["resumo", "💰 Resumo"]].map(([k, v]) => (
             <button
               key={k}
               onClick={() => setTab(k)}
@@ -56,7 +62,8 @@ export default function AdminApp({ funcionario, onLogout }) {
       </header>
 
       <main style={{ padding: "20px 16px", maxWidth: 900, margin: "0 auto" }}>
-        {tab === "ponto" && <PontoTab funcionarios={funcionarios} registros={registros} reload={carregarTudo} />}
+        {tab === "ponto" && <PontoTab funcionarios={funcionarios} registros={registros} horarios={horarios} reload={carregarTudo} />}
+        {tab === "horarios" && <HorariosTab funcionarios={funcionarios} horarios={horarios} horariosErro={horariosErro} reload={carregarTudo} />}
         {tab === "historico" && <HistoricoTab funcionarios={funcionarios} registros={registros} reload={carregarTudo} />}
         {tab === "equipa" && <EquipaTab funcionarios={funcionarios} registros={registros} reload={carregarTudo} />}
         {tab === "resumo" && <ResumoTab funcionarios={funcionarios} registros={registros} />}
@@ -65,7 +72,7 @@ export default function AdminApp({ funcionario, onLogout }) {
   );
 }
 
-function PontoTab({ funcionarios, registros, reload }) {
+function PontoTab({ funcionarios, registros, horarios, reload }) {
   const [data, setData] = useState(today());
 
   const getReg = (fId) => registros.find((r) => r.funcionario_id === fId && r.data === data) || {};
@@ -86,11 +93,19 @@ function PontoTab({ funcionarios, registros, reload }) {
       {funcionarios.filter((f) => !f.is_admin).map((f) => {
         const r = getReg(f.id);
         const total = calcTotal(r);
+        const previsto = horarioDoDia(horarios, f.id, data);
+        const atraso = atrasoEntrada(r, previsto);
         return (
           <div key={f.id} style={card}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
-              <div style={{ fontWeight: 800, color: C.navy }}>{f.nome}</div>
-              {total > 0 && <span style={tag(C.green)}>{fmtHours(total)}</span>}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12, gap: 8 }}>
+              <div>
+                <div style={{ fontWeight: 800, color: C.navy }}>{f.nome}</div>
+                {previsto && <div style={{ fontSize: 11, color: C.textLight }}>Previsto: {resumoHorario(previsto) || "incompleto"}</div>}
+              </div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                {atraso > 0 && <span style={tag(C.red)}>Atraso {fmtHours(atraso)}</span>}
+                {total > 0 && <span style={tag(C.green)}>{fmtHours(total)}</span>}
+              </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8 }}>
               {[["entrada", "Entrada"], ["saida_almoco", "Saída Alm."], ["volta_almoco", "Volta Alm."], ["saida", "Saída"]].map(([campo, label]) => (

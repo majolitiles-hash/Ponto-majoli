@@ -65,3 +65,41 @@ export const C = {
   red: "#EF4444",
   yellow: "#F59E0B",
 };
+
+// ── Quadro de horários ──────────────────────────────────────────
+// Ordem de exibição: Segunda → Domingo (dia_semana segue o JS: 0 = Domingo)
+export const DIAS_SEMANA = [
+  { dia: 1, curto: "Seg", nome: "Segunda" },
+  { dia: 2, curto: "Ter", nome: "Terça" },
+  { dia: 3, curto: "Qua", nome: "Quarta" },
+  { dia: 4, curto: "Qui", nome: "Quinta" },
+  { dia: 5, curto: "Sex", nome: "Sexta" },
+  { dia: 6, curto: "Sáb", nome: "Sábado" },
+  { dia: 0, curto: "Dom", nome: "Domingo" },
+];
+
+// "08:00:00" → "08:00"
+export const hhmm = (t) => (t ? t.slice(0, 5) : "");
+
+export const diaSemanaDe = (dateStr) => {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d).getDay();
+};
+
+export const horarioDoDia = (horarios, funcionarioId, dateStr) =>
+  horarios.find((h) => h.funcionario_id === funcionarioId && h.dia_semana === diaSemanaDe(dateStr)) || null;
+
+// Texto curto para um dia do quadro: "08:00–17:00", "Folga" ou ""
+export const resumoHorario = (h) => {
+  if (!h) return "";
+  if (h.folga) return "Folga";
+  if (!h.entrada || !h.saida) return "";
+  return `${hhmm(h.entrada)}–${hhmm(h.saida)}`;
+};
+
+// Minutos de atraso na entrada (tolerância em minutos); 0 se não houver
+export const atrasoEntrada = (registro, horario, tolerancia = 5) => {
+  if (!registro?.entrada || !horario?.entrada || horario.folga) return 0;
+  const atraso = parseTime(registro.entrada) - parseTime(horario.entrada);
+  return atraso > tolerancia ? atraso : 0;
+};
