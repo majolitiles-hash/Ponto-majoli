@@ -29,6 +29,18 @@ def varredura(solido, z0, z1):
     return mf.Manifold.batch_boolean(partes, mf.OpType.Add)
 
 corpo = varredura(True, 0, comprimento)
+
+# --- Alça embaixo da quina do V (o furo também serve para pendurar) ---
+alca_esp, alca_prof, furo_larg, raio = 8.0, 42.0, 24.0, 4.0
+def ret(y0,y1,z0,z1): return mf.CrossSection([[(y0,z0),(y1,z0),(y1,z1),(y0,z1)]])
+contorno = ret(-alca_prof+raio, -2, 4+raio, comprimento-4-raio).offset(raio, mf.JoinType.Round)
+yf0, yf1 = -alca_prof+7, -alca_prof+7+furo_larg; ym = (yf0+yf1)/2
+# furo com pontas a 45° (imprime em pé sem suporte)
+furo = mf.CrossSection([[(ym,14),(yf1,14+furo_larg/2),(yf1,comprimento-14-furo_larg/2),
+                         (ym,comprimento-14),(yf0,comprimento-14-furo_larg/2),(yf0,14+furo_larg/2)]])
+alca2d = contorno - furo
+alca = alca2d.extrude(alca_esp).transform([[0,0,1,-alca_esp/2],[1,0,0,0],[0,1,0,0]])
+corpo = corpo + alca
 canal = varredura(False, -1, comprimento+1)
 peca = corpo - canal
 mesh = peca.to_mesh()
