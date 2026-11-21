@@ -6,7 +6,7 @@
 - `gerar_stl.py`: gera o STL de novo (`pip install manifold3d trimesh numpy`), com os parâmetros no topo
 
 ## Medidas
-61 × 66 × 100 mm, com alça (o furo da alça serve também para pendurar no cinto ou num prego). Canal de 1 mm de folga, feito para fita de **52 mm** (dá 1,5 mm de sobra de cada lado).
+61 × 66 × 100 mm, com alça (o furo da alça serve também para pendurar no cinto ou num prego). Canal de 2 mm de folga, feito para fita de **52 mm** (dá 1,5 mm de sobra de cada lado).
 Se a sua fita for de 50 ou 53 mm, mude `largura_fita` e gere de novo.
 
 ## Impressão
