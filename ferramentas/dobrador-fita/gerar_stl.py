@@ -2,7 +2,7 @@
 # Mesmos parâmetros do .scad. Uso: python3 gerar_stl.py
 import numpy as np, manifold3d as mf, trimesh
 
-largura_fita, folga_fita, folga_lateral = 52.0, 2.0, 1.5
+largura_fita, folga_fita, folga_lateral = 52.0, 1.3, 1.5
 comprimento, parede, angulo_final = 100.0, 3.0, 90.0
 boca_extra, z_boca, z_ini, z_fim, passos = 2.5, 8.0, 10.0, 82.0, 80
 
