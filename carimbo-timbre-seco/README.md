@@ -10,8 +10,10 @@ Projeto paramétrico em OpenSCAD (`timbre_seco.scad`). Os STLs já exportados es
 | `moldura.stl` | 1 | Deitada de lado, como no arquivo. **Suporte só na fenda da torre** (entre as orelhas do pivô). |
 | `alavanca.stl` | 1 | Deitada de lado, sem suporte. |
 | `embolo.stl` | 1 | Tampa na mesa, haste para cima, sem suporte. |
-| `matriz_macho.stl` | 1 | Relevo para cima. |
-| `matriz_femea.stl` | 1 | Cavidade para cima. |
+| `matriz_macho_majoli.stl` + `matriz_femea_majoli.stl` | 1 par | Relevo / cavidade para cima. Selo da Majoli. |
+| `matriz_macho_celare.stl` + `matriz_femea_celare.stl` | 1 par | Relevo / cavidade para cima. Símbolo + nome Celare. |
+
+A prensa é uma só. Para trocar de marca, troque o par de matrizes: tire o M3 da fêmea e levante o macho pelo furo de baixo.
 
 A moldura e a alavanca são impressas deitadas por um motivo: assim a flexão da prensa corre **ao longo** do filamento, e não entre as camadas, que é onde o ABS quebra.
 
@@ -50,14 +52,15 @@ A moldura e a alavanca são impressas deitadas por um motivo: assim a flexão da
 ## Trocar a arte
 
 No topo do `.scad`:
-- `texto_anel`: o texto em volta.
+- `arte = "majoli"`, `"celare"` ou `"texto"`. Os logos vetorizados estão em `logos/`, gerados a partir do PNG com potrace.
+- `texto_anel`: o texto em volta (só no modo `"texto"`).
 - `logo_svg = "logo.svg"`: o logo no centro. Precisa ser vetor de uma cor só e ficar na mesma pasta.
 - `logo_largura`, `tam_anel`, `engorda`: tamanho do logo, tamanho do texto do anel e espessura mínima dos traços.
 
 Exportar uma peça:
 
 ```bash
-openscad -D 'peca="matriz_macho"' -o stl/matriz_macho.stl timbre_seco.scad
+openscad -D 'arte="celare"' -D 'peca="matriz_macho"' -o stl/matriz_macho_celare.stl timbre_seco.scad
 ```
 
 A troca de arte exige reimprimir **só as duas matrizes**. A prensa continua a mesma.

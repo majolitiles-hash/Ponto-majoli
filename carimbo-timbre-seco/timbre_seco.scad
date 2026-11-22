@@ -14,6 +14,7 @@
 peca = "montagem";
 
 // ---------------- ARTE ----------------
+arte         = "majoli";        // "majoli" | "celare" | "texto"
 texto_anel   = "MAJOLI • TIMBRE ORIGINAL • ";
 texto_centro = "M";             // usado se logo_svg = ""
 logo_svg     = "";              // ex.: "logo.svg" (1 cor, vetor)
@@ -95,13 +96,26 @@ module centro2d() {
              halign="center", valign="center");
 }
 
+module logo(arquivo, largura=0, altura=0) {
+    resize([largura, altura], auto=true) import(arquivo, center=true);
+}
+
 module arte2d() {
     R = diam_arte/2;
     offset(delta=engorda) union() {
-        anel(R - 1.0, R);                       // borda externa 1.0
-        anel(R - 7.0, R - 6.2);                 // borda interna 0.8
-        texto_circular(texto_anel, R - 3.6, tam_anel);
-        centro2d();
+        if (arte == "majoli") {
+            // selo inteiro da Majoli (já tem moldura própria)
+            logo("logos/majoli.svg", largura=36);
+        } else if (arte == "celare") {
+            anel(R - 1.0, R);
+            translate([0, 5.5])  logo("logos/celare_simbolo.svg", altura=15);
+            translate([0, -8.5]) logo("logos/celare_nome.svg", largura=27);
+        } else {
+            anel(R - 1.0, R);                       // borda externa 1.0
+            anel(R - 7.0, R - 6.2);                 // borda interna 0.8
+            texto_circular(texto_anel, R - 3.6, tam_anel);
+            centro2d();
+        }
     }
 }
 
