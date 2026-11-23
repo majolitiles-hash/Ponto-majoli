@@ -26,7 +26,7 @@ engorda      = 0.12;            // engrossa traços finos (FDM)
 
 diam_arte    = 40;              // diâmetro útil da arte
 altura_relevo = 0.8;            // altura do relevo no macho
-folga_matriz = 0.25;            // folga lateral fêmea x macho (por lado)
+folga_matriz = 0.15;            // folga lateral fêmea x macho (por lado)
 prof_femea   = 1.2;             // profundidade da cavidade da fêmea
 
 // ---------------- MECÂNICA ----------------
@@ -285,7 +285,7 @@ module alavanca() {
 // =====================================================================
 //  TESTE DE FOLGA  (3 pares: 0.15 / 0.25 / 0.35)
 // =====================================================================
-folgas_teste = [0.15, 0.25, 0.35];
+folgas_teste = [0.08, 0.11, 0.15];
 
 module padrao_teste() {
     // traços de 0.6 / 0.8 / 1.0 / 1.2 mm + letras

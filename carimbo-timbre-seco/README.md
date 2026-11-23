@@ -7,6 +7,9 @@ Projeto paramétrico em OpenSCAD (`timbre_seco.scad`). Os STLs já exportados es
 | Arquivo | Qtd | Como imprimir |
 |---|---|---|
 | `teste_folga.stl` | 1 | **Imprima primeiro.** São 3 pares macho/fêmea com folgas de 0,15, 0,25 e 0,35 mm. |
+| `teste_folga_fino.stl` | opcional | Pares com 0,08, 0,11 e 0,15 mm, para refinar abaixo de 0,15. |
+
+**Folga calibrada na K2 Pro com ABS: 0,15 mm.** As fêmeas em `stl/` e `3mf/` já saem com esse valor.
 | `moldura.stl` | 1 | Deitada de lado, como no arquivo. **Suporte só na fenda da torre** (entre as orelhas do pivô). |
 | `alavanca.stl` | 1 | Deitada de lado, sem suporte. |
 | `embolo.stl` | 1 | Tampa na mesa, haste para cima, sem suporte. |
