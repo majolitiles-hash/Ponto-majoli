@@ -107,9 +107,8 @@ module arte2d() {
             // selo inteiro da Majoli (já tem moldura própria)
             logo("logos/majoli.svg", largura=36);
         } else if (arte == "celare") {
-            anel(R - 1.0, R);
-            translate([0, 5.5])  logo("logos/celare_simbolo.svg", altura=15);
-            translate([0, -8.5]) logo("logos/celare_nome.svg", largura=27);
+            // só o símbolo, sem o nome e sem o anel
+            logo("logos/celare_simbolo.svg", altura=30);
         } else {
             anel(R - 1.0, R);                       // borda externa 1.0
             anel(R - 7.0, R - 6.2);                 // borda interna 0.8
